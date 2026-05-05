@@ -1,0 +1,243 @@
+Grammar
+
+    0 $accept: expr $end
+
+    1 expr: expr '+' term
+    2     | expr '-' term
+    3     | term
+
+    4 term: term '*' primary
+    5     | primary
+
+    6 primary: ID
+    7        | '(' expr ')'
+    8        | '-' primary
+    9        | ID '(' expr ')'
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    '(' (40) 7 9
+    ')' (41) 7 9
+    '*' (42) 4
+    '+' (43) 1
+    '-' (45) 2 8
+    error (256)
+    ID (258) 6 9
+
+
+Nonterminals, with rules where they appear
+
+    $accept (9)
+        on left: 0
+    expr (10)
+        on left: 1 2 3
+        on right: 0 1 2 7 9
+    term (11)
+        on left: 4 5
+        on right: 1 2 3 4
+    primary (12)
+        on left: 6 7 8 9
+        on right: 4 5 8
+
+
+State 0
+
+    0 $accept: • expr $end
+
+    ID   shift, and go to state 1
+    '-'  shift, and go to state 2
+    '('  shift, and go to state 3
+
+    expr     go to state 4
+    term     go to state 5
+    primary  go to state 6
+
+
+State 1
+
+    6 primary: ID •
+    9        | ID • '(' expr ')'
+
+    '('  shift, and go to state 7
+
+    $default  reduce using rule 6 (primary)
+
+
+State 2
+
+    8 primary: '-' • primary
+
+    ID   shift, and go to state 1
+    '-'  shift, and go to state 2
+    '('  shift, and go to state 3
+
+    primary  go to state 8
+
+
+State 3
+
+    7 primary: '(' • expr ')'
+
+    ID   shift, and go to state 1
+    '-'  shift, and go to state 2
+    '('  shift, and go to state 3
+
+    expr     go to state 9
+    term     go to state 5
+    primary  go to state 6
+
+
+State 4
+
+    0 $accept: expr • $end
+    1 expr: expr • '+' term
+    2     | expr • '-' term
+
+    $end  shift, and go to state 10
+    '+'   shift, and go to state 11
+    '-'   shift, and go to state 12
+
+
+State 5
+
+    3 expr: term •
+    4 term: term • '*' primary
+
+    '*'  shift, and go to state 13
+
+    $default  reduce using rule 3 (expr)
+
+
+State 6
+
+    5 term: primary •
+
+    $default  reduce using rule 5 (term)
+
+
+State 7
+
+    9 primary: ID '(' • expr ')'
+
+    ID   shift, and go to state 1
+    '-'  shift, and go to state 2
+    '('  shift, and go to state 3
+
+    expr     go to state 14
+    term     go to state 5
+    primary  go to state 6
+
+
+State 8
+
+    8 primary: '-' primary •
+
+    $default  reduce using rule 8 (primary)
+
+
+State 9
+
+    1 expr: expr • '+' term
+    2     | expr • '-' term
+    7 primary: '(' expr • ')'
+
+    '+'  shift, and go to state 11
+    '-'  shift, and go to state 12
+    ')'  shift, and go to state 15
+
+
+State 10
+
+    0 $accept: expr $end •
+
+    $default  accept
+
+
+State 11
+
+    1 expr: expr '+' • term
+
+    ID   shift, and go to state 1
+    '-'  shift, and go to state 2
+    '('  shift, and go to state 3
+
+    term     go to state 16
+    primary  go to state 6
+
+
+State 12
+
+    2 expr: expr '-' • term
+
+    ID   shift, and go to state 1
+    '-'  shift, and go to state 2
+    '('  shift, and go to state 3
+
+    term     go to state 17
+    primary  go to state 6
+
+
+State 13
+
+    4 term: term '*' • primary
+
+    ID   shift, and go to state 1
+    '-'  shift, and go to state 2
+    '('  shift, and go to state 3
+
+    primary  go to state 18
+
+
+State 14
+
+    1 expr: expr • '+' term
+    2     | expr • '-' term
+    9 primary: ID '(' expr • ')'
+
+    '+'  shift, and go to state 11
+    '-'  shift, and go to state 12
+    ')'  shift, and go to state 19
+
+
+State 15
+
+    7 primary: '(' expr ')' •
+
+    $default  reduce using rule 7 (primary)
+
+
+State 16
+
+    1 expr: expr '+' term •
+    4 term: term • '*' primary
+
+    '*'  shift, and go to state 13
+
+    $default  reduce using rule 1 (expr)
+
+
+State 17
+
+    2 expr: expr '-' term •
+    4 term: term • '*' primary
+
+    '*'  shift, and go to state 13
+
+    $default  reduce using rule 2 (expr)
+
+
+State 18
+
+    4 term: term '*' primary •
+
+    $default  reduce using rule 4 (term)
+
+
+State 19
+
+    9 primary: ID '(' expr ')' •
+
+    $default  reduce using rule 9 (primary)
+
